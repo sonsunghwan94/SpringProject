@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ItemDAO">
+	<resultMap type="item" id="itemResult">
+		<id property="iid" column="IID" />
+		<result property="iimg" column="IIMG"/>
+		<result property="iname" column="INAME"/>
+		<result property="iprice" column="IPRICE"/>
+		<result property="icategory" column="ICATEGORY"/>
+		<result property="icnt" column="ICNT"/>
+		<result property="idate" column="IDATE"/>
+	</resultMap>
+	
+	<insert id="insertItem">
+		INSERT INTO ITEM VALUES(#{iid},#{iimg},#{iname},#{iprice},#{icategory},#{icnt},now())
+	</insert>
+	<update id="updateItem">
+		UPDATE ITEM SET STAR=#{star} WHERE IID=#{iid}
+	</update>
+	<delete id="deleteItem">
+		DELETE FROM ITEM WHERE IID=#{iid}
+	</delete>
+	<select id="selectOneItem" resultType="item">
+		SELECT * FROM ITEM WHERE IID=#{iid}
+	</select>
+	<select id="selectAllItem" resultMap="itemResult">
+		SELECT * FROM ITEM
+		WHERE 1=1
+		<if test="icategory != null and idate == null and more == 0">
+			AND LOCATE(#{icategory},ICATEGORY) LIMIT 0,20
+		</if>
+		<if test="icategory != null and more != 0">
+			AND LOCATE(#{icategory},ICATEGORY) LIMIT 0,#{more}
+		</if>
+		<if test="iname != null and more != 0">
+			AND LOCATE(#{iname},INAME) LIMIT 0,#{more}
+		</if>
+		<if test="idate != null">
+			ORDER BY IDATE DESC LIMIT 0,20
+		</if>
+	</select>
+	
+</mapper>

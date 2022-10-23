@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberDAO">
+
+	<insert id="insertMember">
+		INSERT INTO MEMBER
+		VALUES(#{mid},#{mpw},#{mname},#{mnick},#{memail},#{mbirth},#{phone})
+	</insert>
+
+	<update id="updateMember">
+		UPDATE MEMBER SET
+		MPW=#{mpw},MNAME=#{mname},MNICK=#{mnick},MEMAIL=#{memail},PHONE=#{phone}
+		WHERE MID=#{mid}
+	</update>
+
+	<delete id="deleteMember">
+		DELETE FROM MEMBER WHERE MID=#{mid}
+	</delete>
+
+	<select id="selectOneMember" resultType="member">
+		SELECT * FROM MEMBER
+		WHERE 1 = 1
+		<if test="mpw==null">
+			AND MID=#{mid}
+		</if>
+		<if test="mpw!=null">
+			AND MID=#{mid} AND MPW=#{mpw}
+		</if>
+	</select>
+
+	<select id="selectAllMember" resultType="member">
+		SELECT * FROM MEMBER
+	</select>
+
+	<select id="nickCheck" resultType="member">
+		SELECT * FROM MEMBER WHERE MNICK=#{mnick}
+	</select>
+	
+	<select id="mailCheck" resultType="member">
+		SELECT * FROM MEMBER WHERE MEMAIL=#{memail} AND MNAME=#{mname}
+	</select>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReviewDAO">
+
+<resultMap type="review" id="reviewResult">
+	<id property="rid" column="RID"/>
+	<result property="iid" column="IID"/>
+	<result property="mid" column="MID"/>
+	<result property="writer" column="WRITER"/>
+	<result property="content" column="CONTENT"/>
+	<result property="star" column="STAR"/>
+	<result property="rimg" column="RIMG"/>
+	<collection property="memberVO" resultMap="memberResult"/>
+</resultMap>
+<resultMap type="member" id="memberResult">
+	<id property="mid" column="MID"/>
+	<result property="mnick" column="MNICK"/>
+</resultMap>
+
+<insert id="insertReview">
+	INSERT INTO REVIEW(IID,MID,WRITER,CONTENT,STAR,RIMG) VALUES(#{iid},#{mid},#{writer},#{content},#{star},#{rimg})
+</insert>
+
+<update id="updateReview">
+	UPDATE REVIEW SET CONTENT=#{content},STAR=#{star} WHERE RID=#{rid}
+</update>
+
+<delete id="deleteReview">
+	DELETE FROM REVIEW WHERE RID=#{rid}
+</delete>
+<select id="selectStar" resultType="int">
+	SELECT AVG(STAR) FROM REVIEW WHERE IID=#{iid};
+</select>
+<select id="selectAllReview" resultMap="reviewResult">
+	SELECT R.RID,R.IID,R.MID,M.MNICK AS WRITER,R.CONTENT,R.STAR,R.RIMG FROM REVIEW R INNER JOIN MEMBER M ON R.MID=M.MID WHERE IID=#{iid}
+</select>
+</mapper>

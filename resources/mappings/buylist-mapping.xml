@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BuyListDAO">
+
+<resultMap type="buyList" id="buylistResult">
+	<id property="bid" column="BID"/>
+	<result property="iid" column="IID"/>
+	<result property="mid" column="MID"/>
+	<collection property="itemVO" resultMap="itemResult"/>
+	<collection property="memberVO" resultMap="memberResult"/>
+</resultMap>
+
+<resultMap type="item" id="itemResult">
+	<id property="iid" column="IID"/>
+	<result property="iimg" column="IIMG"/>
+	<result property="iname" column="INAME"/>
+	<result property="iprice" column="IPRICE"/>
+	<result property="icategory" column="ICATEGORY"/>
+	<result property="icnt" column="ICNT"/>
+	<result property="idate" column="IDATE"/>
+</resultMap>
+
+<resultMap type="member" id="memberResult">
+	<id property="mid" column="MID"/>
+</resultMap>
+
+<insert id="insertBuyList">
+	INSERT INTO BUYLIST(IID,MID) VALUES(#{iid},#{mid})
+</insert>
+
+<delete id="deleteBuyList">
+	DELETE FROM BUYLIST WHERE BID=#{bid}
+</delete>
+
+<select id="countBuyList" resultType="int">
+	SELECT COUNT(*) FROM BUYLIST WHERE MID=#{mid}
+</select>
+
+<select id="selectAllBuyList" resultMap="buylistResult">
+	SELECT I.* FROM BUYLIST B INNER JOIN ITEM I ON B.IID=I.IID INNER JOIN MEMBER M ON B.MID=M.MID WHERE B.MID=#{mid} ORDER BY BID DESC LIMIT #{startnum},5
+</select>
+</mapper>
